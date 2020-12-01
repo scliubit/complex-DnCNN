@@ -2,6 +2,9 @@
 
 Source code for [Deep Denoising Neural Network Assisted Compressive Channel Estimation for mmWave Intelligent Reflecting Surfaces](https://ieeexplore.ieee.org/document/9127834), modified from [DnCNN](https://github.com/cszn/DnCNN). 
 
+```
+S. Liu, Z. Gao, J. Zhang, M. D. Renzo and M. -S. Alouini, "Deep Denoising Neural Network Assisted Compressive Channel Estimation for mmWave Intelligent Reflecting Surfaces," in IEEE Transactions on Vehicular Technology, vol. 69, no. 8, pp. 9223-9228, Aug. 2020, doi: 10.1109/TVT.2020.3005402.
+```
 
 
 To successfully run the code, you should follow the steps below
