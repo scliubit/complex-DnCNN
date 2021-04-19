@@ -4,7 +4,7 @@
 
 `main.m`的参数可以自由设置，此处给出的设置为文章的参数设置，执行一次的时间较长，且随着运行的推进，运算速度会逐渐下降。
 
-有关我们的其他研究，可以在[gaozhen16.github.io](gaozhen16.eu.org)中找到。
+有关我们的其他研究，可以在[gaozhen16.github.io](https://gaozhen16.eu.org)中找到。
 
 ---
 
@@ -12,7 +12,7 @@ This is the source code for [paper](https://ieeexplore.ieee.org/document/9127834
 
 Parameters for `main.m` can be changed freely, while here we only give the preferred parameter set in the original paper. A complete process of calculation can be time-consuming, and the operational performance is declining during the whole calculation process.
 
-For further infomation, please visit our official website [gaozhen16.github.io](gaozhen16.eu.org)
+For further infomation, please visit our official website [gaozhen16.github.io](https://gaozhen16.eu.org)
 
 ---
 
