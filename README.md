@@ -15,8 +15,8 @@ To successfully run the code, you should follow the steps below
 
 Note that the required shape is $[N,2,N_{IRS},N_{C}]$, where 2 represents the real part and imaginary part of the channel matrix.
 
-- Set the parameters in `train_cDnCNN.py` and create the corresponding folders before running the program.
-- Run `test_cDnCNN.py` to evaluate the performance.
+- Set the parameters in `modelTrain.py` and create the corresponding folders before running the program.
+- *If you want to evalutate the performance, please change the dataset configurations in `modelTrain.py`*
 
 ---
 
@@ -29,8 +29,8 @@ Note that the required shape is $[N,2,N_{IRS},N_{C}]$, where 2 represents the re
 
 值得注意的是，信道数据集的尺寸要求为$[N,2,N_{IRS},N_{C}]$，其中2代表信道矩阵的实部和虚部。
 
-- 运行`train_cDnCNN.py`进行训练，在这之前要设置合适的参数（用于区别保存模型时的路径）。
-- 运行`test_cDnCNN.py`测试性能表现。
+- 运行`modelTrain.py`进行训练，在这之前要设置合适的参数（用于区别保存模型时的路径）。
+- *若需要测试性能表现，请将训练文件中的数据集配置换成测试集*
 
 ---
 

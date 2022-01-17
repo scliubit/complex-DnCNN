@@ -1,5 +1,50 @@
 import torch
 import numpy as np
+from torch.utils.data import DataLoader
+from torch.utils.data import Dataset
+import os
+import glob
+import datetime
+import re
+
+
+def findLastCheckpoint(save_dir):
+    file_list = glob.glob(os.path.join(save_dir, 'model_*.pth'))
+    if file_list:
+        epochs_exist = []
+        for file_ in file_list:
+            result = re.findall(".*model_(.*).pth.*", file_)
+            epochs_exist.append(int(result[0]))
+        initial_epoch = max(epochs_exist)
+    else:
+        initial_epoch = 0
+    return initial_epoch
+
+
+def log(*args, **kwargs):
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:"), *args,
+          **kwargs)
+
+
+class MyDenoisingDataset(Dataset):
+    """Dataset wrapping tensors.
+    Arguments:
+        xs (Tensor): clean image patches
+        sigma: noise level, e.g., 25
+    """
+
+    def __init__(self, xs, ys):
+        super(MyDenoisingDataset, self).__init__()
+        self.xs = xs
+        self.ys = ys
+
+    def __getitem__(self, index):
+        batch_x = self.xs[index]  # ground truth
+        batch_y = self.ys[index]  # noisy image
+        return batch_y, batch_x
+
+    def __len__(self):
+        return self.xs.size(0)
 
 
 def cov(m, rowvar=False):
