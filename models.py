@@ -2,6 +2,7 @@
 # 2019 1127 Modified   by S. Liu
 # 2020 0321 ReModified by S. Liu
 # 2022 0117 Re S. Liu
+# 2022 0308 Re S. Liu
 
 import argparse
 import re
@@ -24,6 +25,7 @@ class ComplexBN(torch.nn.Module):
             "cuda" if torch.cuda.is_available() else "cpu")
         self.eps = eps
         self.num_features = num_features
+        self.upper = True
         # self.batchNorm2dF = torch.nn.BatchNorm2d(num_features,
         #                                          affine=affine).to(self.device)
 
@@ -38,7 +40,8 @@ class ComplexBN(torch.nn.Module):
         imagVec = torch.flatten(imag)
         re_im_stack = torch.stack((realVec, imagVec), dim=1)
         covMat = cov(re_im_stack)
-        e, v = torch.symeig(covMat, True)
+        # e, v = torch.symeig(covMat, True)
+        e, v = torch.linalg.eigh(covMat, UPLO='U' if self.upper else 'L')
         covMat_sq2 = torch.mm(torch.mm(v, torch.diag(torch.pow(e, -0.5))),
                               v.t())
         data = torch.stack((realVec - real.mean(), imagVec - imag.mean()),

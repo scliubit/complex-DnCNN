@@ -16,7 +16,7 @@ if nargin <= 6
     % ch.max_BS1 = pi * 2 / 3; % BS½Ç¶È·¶Î§
     ch.max_BS1 = ch.max_BS; % BS½Ç¶È·¶Î§
     ch.max_MS = pi; % users½Ç¶È·¶Î§
-    ch.sigma = 0;     % 7.5
+    ch.sigma = 7.5;     % 7.5
     ch.lambda = 3e8 / ch.fc; % length of carrier wave
     ch.d = ch.lambda / 2;    % antenna spacing
     

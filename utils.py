@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 import numpy as np
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
@@ -6,6 +7,24 @@ import os
 import glob
 import datetime
 import re
+import random
+
+
+class NMSELoss(nn.Module):
+    def __init__(self):
+        super(NMSELoss, self).__init__()
+
+    def forward(self, y_pred, y_true):
+        return torch.mean(torch.sum((y_pred - y_true) ** 2, dim=1)) / torch.mean(torch.sum((y_true) ** 2, dim=1))
+
+
+def seed_everything(seed=42):
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    random.seed(seed)
+    torch.backends.cudnn.deterministic = True
 
 
 def findLastCheckpoint(save_dir):

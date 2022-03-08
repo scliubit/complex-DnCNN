@@ -10,10 +10,10 @@ N_MS = 1;
 N_irs = [16 16];
 N_IRS = N_irs(1)*N_irs(2);
 % N_IRS = 64;
-FFT_len = 64;
+FFT_len = 256;
 Nc = FFT_len; % sub carriers
 
-BW = 100e6;
+BW = 90e6;
 fs = BW;
 fc = 28e9;          % frequency of carrier is 28GHz
 lambda = 3e8/fc;
@@ -34,7 +34,7 @@ mode=1; % 0: phase shifters, 1: switchers
 %% Training Set Generation setup
 debug           =   1;
 debugRate       =   0.75;
-trainingSize    =   1;%12000-debug*debugRate*12000;
+trainingSize    =   100;%12000-debug*debugRate*12000;
 testSize        =   0;%4000-debug*debugRate*4000;
 PNR_dBs         =   5;
 iterMax         =   trainingSize+testSize;
@@ -135,7 +135,7 @@ for kk=1:length(activeEleNumList)
             epsilon = 10^(-(snreff/10));
             h_v_hat=zeros(N_IRS*N_MS,Nc);
             [ h_v_hat,iter_num ] = OMP_Algorithm_MMV( y_k_com,Phi,Psi,epsilon,eye(M),100);
-            return
+            % return
             %% Reestablish the high-dimensional channel matrix based on estimated channal support and corresponding channel coefficients
             h_k_est_com = Psi*h_v_hat;
             H_f_est=reshape(h_k_est_com,[N_IRS,N_MS,Nc]);
@@ -174,12 +174,15 @@ for kk=1:length(activeEleNumList)
         %%
         % NMSE(ii) = NMSE(ii)/iterMax;
         % toc
-        disp(['Finished ',num2str(ii),'/', num2str(length(PNR_dBs)) ' , NMSE = ' num2str(NMSE(1,ii))]);
+        disp(['Finished ',num2str(ii),'/', num2str(length(PNR_dBs)) ' , NMSE = ' num2str(NMSE(1,ii)/iterMax)]);
         NMSEvsActiveNum(ii,kk)=NMSE(1,ii);
     end
     
 end
 %%
+save trueTrainingChannel trueTrainingChannel
+save trainingChannel trainingChannel
+
 % save channelMat channel3
 % save trainingChannel15 trainingChannel
 % save trueTrainingChannel15 trueTrainingChannel
