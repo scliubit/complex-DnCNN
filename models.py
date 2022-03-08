@@ -13,6 +13,7 @@ import time
 import numpy as np
 import torch
 import h5py
+import torch.nn as nn
 from scipy import io
 from utils import cov
 
@@ -70,10 +71,10 @@ class ComplexConv2D(torch.nn.Module):
         self.device = torch.device(
             "cuda" if torch.cuda.is_available() else "cpu")
         self.padding = padding
-
+        self.paddingF = nn.ZeroPad2d(1)
         # Model components
         # define complex conv
-        self.conv_re = torch.nn.Conv2d(in_channels,
+        self.conv_re = nn.Conv2d(in_channels,
                                        out_channels,
                                        kernel_size,
                                        stride=stride,
@@ -81,7 +82,7 @@ class ComplexConv2D(torch.nn.Module):
                                        dilation=dilation,
                                        groups=groups,
                                        bias=bias).to(self.device)
-        self.conv_im = torch.nn.Conv2d(in_channels,
+        self.conv_im = nn.Conv2d(in_channels,
                                        out_channels,
                                        kernel_size,
                                        stride=stride,
@@ -95,10 +96,11 @@ class ComplexConv2D(torch.nn.Module):
         self.bias2 = self.conv_im.bias
 
     def forward(self, x):
-        paddingF = torch.nn.ZeroPad2d(1)
+        
         # print(x.shape)
-        r = paddingF(x[:, 0])  # NCHW
-        i = paddingF(x[:, 1])
+        r = self.paddingF(x[:, 0])  # NCHW
+        # print(r.shape)
+        i = self.paddingF(x[:, 1])
         # print(r.shape)
         # New 20191102
         r[:, :, 0, :], i[:, :, 0, :] = r[:, :, -2, :], i[:, :, -2, :]
@@ -120,13 +122,14 @@ class ComplexReLU(torch.nn.Module):
         super(ComplexReLU, self).__init__()
         self.device = torch.device(
             "cuda" if torch.cuda.is_available() else "cpu")
-        self.relu_re = torch.nn.ReLU(inplace=inplace).to(self.device)
-        self.relu_im = torch.nn.ReLU(inplace=inplace).to(self.device)
+        self.relu = nn.ReLU()
+        # self.relu_re = nn.ReLU(inplace=inplace).to(self.device)
+        # self.relu_im = nn.ReLU(inplace=inplace).to(self.device)
 
     def forward(self, x):
-        output = torch.stack(
-            (self.relu_re(x[:, 0]), self.relu_im(x[:, 1])), dim=1).to(self.device)
-        return output
+        # output = torch.stack(
+        #     (self.relu_re(x[:, 0]), self.relu_im(x[:, 1])), dim=1).to(self.device)
+        return self.relu(x)
 
 
 class ComplexDnCNN(torch.nn.Module):

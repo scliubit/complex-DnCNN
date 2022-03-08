@@ -10,12 +10,20 @@ import re
 import random
 
 
+def NMSE_cuda(x, x_hat):
+    x = x.contiguous().view(len(x), -1)
+    x_hat = x_hat.contiguous().view(len(x_hat), -1)
+    power = torch.sum(abs(x) ** 2, dim=1)
+    mse = torch.sum(abs(x - x_hat) ** 2, dim=1) / power
+    return mse
+
+
 class NMSELoss(nn.Module):
     def __init__(self):
         super(NMSELoss, self).__init__()
 
-    def forward(self, y_pred, y_true):
-        return torch.mean(torch.sum((y_pred - y_true) ** 2, dim=1)) / torch.mean(torch.sum((y_true) ** 2, dim=1))
+    def forward(self, x, x_hat):
+        return torch.mean(NMSE_cuda(x, x_hat))
 
 
 def seed_everything(seed=42):

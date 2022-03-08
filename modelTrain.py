@@ -30,7 +30,7 @@ parser.add_argument(
     default='cDnCNN',
     type=str,
     help='choose a type of model')
-parser.add_argument('--batch_size', default=4, type=int, help='batch size')
+parser.add_argument('--batch_size', default=2, type=int, help='batch size')
 parser.add_argument('--train_data',
                     default='channel',
                     type=str,
@@ -55,9 +55,11 @@ clusters = args.channel_clusters
 paths = args.paths_per_cluster
 AS = args.angle_spread
 batch_size = args.batch_size
+print(batch_size)
 train_data = args.train_data
 n_epoch = args.epoch
 snr = args.snr
+PRINT_FREQ = 20
 # snr = 10
 save_dir = os.path.join('./models', args.model + '_' + 'snr' + str(snr))
 if not os.path.exists(save_dir):
@@ -78,7 +80,7 @@ if __name__ == '__main__':
     print(">>> Building Model Finished")
     # model.train()  # Enable BN and Dropout
     # criterion = nn.MSELoss(reduction='sum').cuda()
-    criterion = NMSELoss().to(device=device)
+    criterion = NMSELoss()
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
     scheduler = MultiStepLR(optimizer, milestones=[20, 40, 60, 80, 100, 120],
                             gamma=0.7)  # learning rates
@@ -140,15 +142,20 @@ if __name__ == '__main__':
                 batch_x, batch_y = batch_yx[1].cuda(), batch_yx[0].cuda()
             else:
                 batch_x, batch_y = batch_yx[1], batch_yx[0]
-            loss = criterion(model(batch_y), batch_x)
+            out = model(batch_y)
+            loss = criterion(out, batch_x)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            scheduler.step(epoch)  # step to the learning rate in this epoch
+            scheduler.step()  # step to the learning rate in this epoch
             epoch_loss += loss.item()
-            if n_count % 10 == 0:
-                print('[%4d] - [%4d]/[%4d] loss = %2.4f\t' %
-                      (epoch + 1, n_count, len(trainLoader), loss.item() / batch_size))
+            del batch_x # free some memory
+            del batch_y
+            del batch_yx
+            del out
+            if n_count % PRINT_FREQ == 0:
+                print('[%4d] - [%4d]/[%4d] loss = %2.4f\ttime: %2.4f' %
+                      (epoch + 1, n_count, len(trainLoader), loss.item(), time.time() - start_time))
         elapsed_time = time.time() - start_time
         log('epoch = %4d , loss = %4.4f , time = %4.2f s' %
             (epoch + 1, epoch_loss / n_count, elapsed_time))
