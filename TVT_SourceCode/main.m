@@ -63,7 +63,7 @@ for kk=1:length(activeEleNumList)
         for iter = 1:iterMax
             %% Channel
             % H_f = FSF_Channel_Model_uplink(N_ms, N_irs, fc, Lp, sigma_2_alpha, fs, K);
-            H_f_o   = channel_f(N_ms,N_irs,1,FFT_len,BW)/3.2;
+            H_f_o   = channel_f(N_ms,N_irs,1,FFT_len,BW);
             activeEleIndex  =   randperm(N_IRS);
             activeEleIndex  =   sort(activeEleIndex(1:activeEleNum));
             %% pilot Sig

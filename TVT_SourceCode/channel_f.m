@@ -6,25 +6,25 @@ function [H, H_At, H_Ar, H_D, An_t, An_r] = channel_f(Nt, Nr, K, N_carrier,BW, c
 % H_D: path gain
 % An_t/An_r:  AoDs/AoAs of paths
 % N:  the path of strongest gain
-% H[a b c d]; a£º×Ó¾ØÕó×ÝÎ¬¶È£»b£º×Ó¾ØÕóºáÎ¬¶È£»c£º×ÓÔØ²¨ÊýÁ¿£»d£ºÓÃ»§ÊýÁ¿
+% H[a b c d]; aï¿½ï¿½ï¿½Ó¾ï¿½ï¿½ï¿½ï¿½ï¿½Î¬ï¿½È£ï¿½bï¿½ï¿½ï¿½Ó¾ï¿½ï¿½ï¿½ï¿½Î¬ï¿½È£ï¿½cï¿½ï¿½ï¿½ï¿½ï¿½Ø²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½dï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
 %% Set parameters
 if nargin <= 6
-    ch.fc = 28e9; % ÆµÂÊ
-    ch.Nc = 6;    % ´Ø  8
-    ch.Np = 8;   % Ã¿¸ö´ØÖÐµÄÂ·¾¶ÊýÁ¿  10
-    ch.max_BS = pi; % BS½Ç¶È·¶Î§
-    % ch.max_BS1 = pi * 2 / 3; % BS½Ç¶È·¶Î§
-    ch.max_BS1 = ch.max_BS; % BS½Ç¶È·¶Î§
-    ch.max_MS = pi; % users½Ç¶È·¶Î§
+    ch.fc = 28e9; % Æµï¿½ï¿½
+    ch.Nc = 6;    % ï¿½ï¿½  8
+    ch.Np = 1;   % Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  10
+    ch.max_BS = pi; % BSï¿½Ç¶È·ï¿½Î§
+    % ch.max_BS1 = pi * 2 / 3; % BSï¿½Ç¶È·ï¿½Î§
+    ch.max_BS1 = ch.max_BS; % BSï¿½Ç¶È·ï¿½Î§
+    ch.max_MS = pi; % usersï¿½Ç¶È·ï¿½Î§
     ch.sigma = 7.5;     % 7.5
     ch.lambda = 3e8 / ch.fc; % length of carrier wave
     ch.d = ch.lambda / 2;    % antenna spacing
     
     ch.fs=BW;
-    ch.tau_max = (N_carrier / 2) / ch.fs;  % Â·¾¶×î´óÊ±ÑÓ
+    ch.tau_max = (N_carrier / 2) / ch.fs;  % Â·ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 end
 
-angle = ch.sigma * pi / 180;%±ê×¼²î¼ÆËã³öÀ´µÄ¼ä¸ô½Ç¶È
+angle = ch.sigma * pi / 180;%ï¿½ï¿½×¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ç¶ï¿½
 k = 2 * pi * ch.d / ch.lambda;
 total_Np = ch.Nc * ch.Np;
 %%
@@ -38,7 +38,7 @@ switch (length(Nr) + length(Nt))
             N_t = (0 : (Nt - 1))';    % transmiter
             phi = (ch.max_BS - angle) * rand(ch.Nc, 1) * ones(1, ch.Np) + ...
                 angle * (rand(ch.Nc, ch.Np) - 0.5 * ones(ch.Nc, ch.Np)) - ch.max_BS / 2 + angle / 2;
-            %             phi = sort(phi, 2); % ´ØÖÐÐÄ¶ÔÆëÊµÑé 18/08/18
+            %             phi = sort(phi, 2); % ï¿½ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½Êµï¿½ï¿½ 18/08/18
             
             phi = k * sin(reshape(phi',[1, total_Np]));
             a_BS = N_t * phi;
@@ -47,14 +47,14 @@ switch (length(Nr) + length(Nt))
             N_r = (0 : (Nr - 1))';    % receiver
             theta = (ch.max_MS - angle) * rand(ch.Nc, 1) * ones(1,ch. Np) + ...
                 angle * (rand(ch.Nc, ch.Np) - 0.5 * ones(ch.Nc, ch.Np)) - ch.max_MS / 2 + angle / 2;
-            %             theta = sort(theta, 2); % ´ØÖÐÐÄ¶ÔÆëÊµÑé 18/08/18
+            %             theta = sort(theta, 2); % ï¿½ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½Êµï¿½ï¿½ 18/08/18
             
             theta = k * (reshape(theta',[1, total_Np]));
             a_MS = N_r * theta;
             Ar = exp(1i * a_MS) / sqrt(Nr);
             
             
-            %----------------------------´ØÖÐÐÄ¶ÔÆëÊµÑé 18/08/18 ------------------------------------
+            %----------------------------ï¿½ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½Êµï¿½ï¿½ 18/08/18 ------------------------------------
             %             D_am = (randn(1, ch.Nc) + 1i * randn(1, ch.Nc)) / sqrt(2);
             %             D_am = sort(D_am, 'descend');
             %             D_am = reshape(ones(ch.Np, 1) * D_am, 1, total_Np);
@@ -103,7 +103,7 @@ switch (length(Nr) + length(Nt))
             
             theta1 = reshape(theta1', [total_Np, 1]);
             An_t(:, :, i) = theta1.';
-            An_r(:, :, i) = phi1.';   %->ÌáÈ¡½Ç¶È
+            An_r(:, :, i) = phi1.';   %->ï¿½ï¿½È¡ï¿½Ç¶ï¿½
             A_t = zeros(total_Nt, total_Np);
             for path = 1 : total_Np
                 e_a1 = exp(-1i * k * sin(phi1(path, 1)) * cos(theta1(path, 1)) * n_t); % channel model 2
@@ -170,7 +170,7 @@ switch (length(Nr) + length(Nt))
             
             theta1 = reshape(theta1', [total_Np, 1]);
             An_t(:, :, i) = theta1.';
-            An_r(:, :, i) = phi1.';   %->ÌáÈ¡½Ç¶È
+            An_r(:, :, i) = phi1.';   %->ï¿½ï¿½È¡ï¿½Ç¶ï¿½
             A_t = zeros(total_Nt, total_Np);
             for path = 1 : total_Np
                 e_a1 = exp(-1i * k * sin(phi1(path, 1)) * cos(theta1(path, 1)) * n_t); % channel model 2
