@@ -82,7 +82,7 @@ for kk=1:length(activeEleNumList)
                 
                 F_RF_m = exp(1j*2*pi*rand(N_MS,N_RF));
                 %  F_RF_m = ones(N_MS,N_RF);
-                F_RF_quan_phase_m = round((angle(F_RF_m)+pi)*N_Bits/(2*pi)) *2*pi/N_Bits;  %  - pi
+                F_RF_quan_phase_m = round((angle(F_RF_m)+pi)*(2^N_Bits)/(2*pi)) *2*pi/(2^N_Bits);  %  - pi
                 Quantized_F_RF_m = exp(1j*F_RF_quan_phase_m)/sqrt(N_MS);
                 
                 F_temp_m        = Quantized_F_RF_m*F_BB_m;
@@ -94,7 +94,7 @@ for kk=1:length(activeEleNumList)
                 if mode==0
                     % 0: phase shifters
                     W_RF_m = exp(1j*2*pi*rand(N_IRS,N_RF));
-                    W_RF_quan_phase_m = round((angle(W_RF_m)+pi)*N_Bits/(2*pi)) *2*pi/N_Bits;  %  - pi
+                    W_RF_quan_phase_m = round((angle(W_RF_m)+pi)*(2^N_Bits)/(2*pi)) *2*pi/(2^N_Bits);  %  - pi
                     Quantized_W_RF_m = exp(1j*W_RF_quan_phase_m)/sqrt(N_IRS);
                     W_m = Quantized_W_RF_m*W_BB_m;
                 else
